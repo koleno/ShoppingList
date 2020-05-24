@@ -147,7 +147,12 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
             },
           )
         ],
-        title: Text(widget.title),
+        title: Row(children: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
+              child: Icon(Icons.shopping_cart)),
+          Text(widget.title)
+        ]),
       ),
       body: StreamBuilder(
         stream: listBloc.items,
