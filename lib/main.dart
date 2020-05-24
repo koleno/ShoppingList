@@ -95,6 +95,10 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               onChanged: (value) {
                 title = value;
               },
+              onSubmitted: (value) {
+                _handleAdd(value);
+                Navigator.of(context).pop();
+              },
             ),
             actions: <Widget>[
               FlatButton(
@@ -135,7 +139,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
           StreamBuilder(
             stream: listBloc.hasActions,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.data) {
+              if (snapshot.data != null && snapshot.data) {
                 return _getDeleteAction();
               } else {
                 return Container();

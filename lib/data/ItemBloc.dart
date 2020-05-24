@@ -17,8 +17,8 @@ class ShoppingListBloc {
 
   getItems() async {
     List<Item> itemsList = await _itemDao.getItems();
-    _itemController.sink.add(itemsList);
     _actionsController.sink.add(itemsList.isNotEmpty);
+    _itemController.sink.add(itemsList);
   }
 
   deleteItem(Item item) async {
