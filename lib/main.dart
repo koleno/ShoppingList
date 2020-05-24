@@ -22,29 +22,29 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primarySwatch: Colors.red,
           accentColor: Colors.amber),
-      home: MyHomePage(title: appTitle),
+      home: ShoppingListPage(title: appTitle),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class ShoppingListPage extends StatefulWidget {
+  ShoppingListPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ShoppingListPageState createState() => _ShoppingListPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final ItemBloc itemBloc = ItemBloc();
+class _ShoppingListPageState extends State<ShoppingListPage> {
+  final ShoppingListBloc listBloc = ShoppingListBloc();
 
   void _handleChange(Item item) async {
-    itemBloc.toggleItem(item);
+    listBloc.toggleItem(item);
   }
 
   void _handleAdd(String title) async {
-    itemBloc.addItem(Item(checked: false, title: title));
+    listBloc.addItem(Item(checked: false, title: title));
   }
 
   void _handleDeleteAll() async {
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               FlatButton(
                 child: Text("Delete"),
                 onPressed: () {
-                  itemBloc.deleteAllItems();
+                  listBloc.deleteAllItems();
                   Navigator.of(context).pop();
                 },
               ),
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleDismiss(Item item) async {
-    itemBloc.deleteItem(item);
+    listBloc.deleteItem(item);
   }
 
   Widget _getDeleteAction() {
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         actions: <Widget>[
           StreamBuilder(
-            stream: itemBloc.hasActions,
+            stream: listBloc.hasActions,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.data) {
                 return _getDeleteAction();
@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: StreamBuilder(
-        stream: itemBloc.items,
+        stream: listBloc.items,
         builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.isNotEmpty) {
@@ -196,6 +196,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
-    itemBloc.close();
+    listBloc.close();
   }
 }

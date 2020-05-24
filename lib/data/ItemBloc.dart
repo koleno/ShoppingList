@@ -4,14 +4,14 @@ import 'package:shoppinglist/data/ItemDao.dart';
 
 import 'Item.dart';
 
-class ItemBloc {
+class ShoppingListBloc {
   final _itemDao = ItemDao();
   final _itemController = StreamController<List<Item>>.broadcast();
   final _actionsController = StreamController<bool>.broadcast();
   get items => _itemController.stream;
   get hasActions => _actionsController.stream;
 
-  ItemBloc() {
+  ShoppingListBloc() {
     getItems();
   }
 
