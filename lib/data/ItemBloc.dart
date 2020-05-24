@@ -7,14 +7,18 @@ import 'Item.dart';
 class ItemBloc {
   final _itemDao = ItemDao();
   final _itemController = StreamController<List<Item>>.broadcast();
+  final _actionsController = StreamController<bool>.broadcast();
   get items => _itemController.stream;
+  get hasActions => _actionsController.stream;
 
   ItemBloc() {
     getItems();
   }
 
   getItems() async {
-    _itemController.sink.add(await _itemDao.getItems());
+    List<Item> itemsList = await _itemDao.getItems();
+    _itemController.sink.add(itemsList);
+    _actionsController.sink.add(itemsList.isNotEmpty);
   }
 
   deleteItem(Item item) async {
@@ -27,6 +31,11 @@ class ItemBloc {
     getItems();
   }
 
+  deleteAllItems() async {
+    await _itemDao.deleteAllItems();
+    getItems();
+  }
+
   /// Switches item to checked / unchecked
   toggleItem(Item item) async {
     await _itemDao.updateItem(Item(id: item.id, checked: !item.checked, title: item.title));
@@ -35,6 +44,7 @@ class ItemBloc {
 
   close() {
     _itemController.close();
+    _actionsController.close();
   }
 
 }

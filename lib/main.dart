@@ -47,6 +47,33 @@ class _MyHomePageState extends State<MyHomePage> {
     itemBloc.addItem(Item(checked: false, title: title));
   }
 
+  void _handleDeleteAll() async {
+    showDialog<String>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+                "Do you want to empty your shopping list?\n\nYou can also remove individual items by swiping them to sides."),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("Delete"),
+                onPressed: () {
+                  itemBloc.deleteAllItems();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   void _handleAddClicked() async {
     String title = "";
 
@@ -92,11 +119,30 @@ class _MyHomePageState extends State<MyHomePage> {
     itemBloc.deleteItem(item);
   }
 
+  Widget _getDeleteAction() {
+    return IconButton(
+      padding: EdgeInsets.all(10),
+      icon: Icon(Icons.delete),
+      onPressed: _handleDeleteAll,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[],
+        actions: <Widget>[
+          StreamBuilder(
+            stream: itemBloc.hasActions,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.data) {
+                return _getDeleteAction();
+              } else {
+                return Container();
+              }
+            },
+          )
+        ],
         title: Text(widget.title),
       ),
       body: StreamBuilder(

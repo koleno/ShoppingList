@@ -27,6 +27,11 @@ class ItemDao {
     await db.delete("Items", where: "id = ?", whereArgs: [item.id]);
   }
 
+  Future<void> deleteAllItems() async {
+    final db = await appDb.database;
+    await db.delete("Items");
+  }
+
   Future<List<Item>> getItems() async {
     final db = await appDb.database;
     final List<Map<String, dynamic>> maps = await db.query("Items");
